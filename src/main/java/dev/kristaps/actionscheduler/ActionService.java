@@ -75,4 +75,3 @@ public class ActionService {
         LocalDateTime utc = LocalDateTime.now(ZoneId.of("UTC"));
         return OffsetDateTime.of(utc, ZoneOffset.of(timeZoneOffset));
     }
-}
