@@ -10,3 +10,12 @@ Any file location.
 * The program can be configured in the application.properties file.
 
 After hitting run the program executes immediately and then only after the specified interval
+
+To run the program you must first set the file path in the application.properties file.
+
+At the moment the program will only print - "It's time to do the action" when time and days match the CSV,
+but it can be modified to make any method call. 
+
+To do this, changes need to be made in the highlighted area. 
+
+<img src="ReadMePic/Screen.PNG">
