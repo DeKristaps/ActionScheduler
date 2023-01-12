@@ -1,15 +1,12 @@
 <h1>Action scheduler</h1>
 
-This is an Action scheduler that runs in a configurable interval, and can reed a CVS File containing 
-a time in HH:MI format, and a mask determining on which days the action should be made.
-For instance 1 in binary equals 1 so the task would run on mondays while 5 equals 101 so task would run on monday and
-Wednesday
+This is an Action scheduler that runs in a configurable interval, and can read a CVS File containing a time in HH: MI format, and a mask determining on which days the action should be made. For instance 1 in binary equals 1 so the task would run on Mondays while 5 equals 101 so the task would run on Mondays and Wednesdays
 
 The program can be configured with:
+
 * Zone offset for checking times in different countries.
 * A run interval in ms (after which the program opens the file again and checks the days and times listed).
-* Any file location.
-
-The program can be configured in the application.properties file.
+Any file location.
+* The program can be configured in the application.properties file.
 
 After hitting run the program executes immediately and then only after the specified interval
