@@ -2,14 +2,16 @@ package dev.kristaps.actionscheduler;
 
 import dev.kristaps.actionscheduler.dto.Request;
 import dev.kristaps.actionscheduler.util.DayParser;
-import dev.kristaps.actionscheduler.util.ZonedTime;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.*;
+import java.time.Instant;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -17,18 +19,18 @@ import java.util.Scanner;
 @Service
 public class ActionService {
     private final Long SECONDS_IN_MS = 1000L;
+    @Value("${actionScheduler.timeZoneOffset}")
+    private String timeZoneOffset;
     @Value("${actionScheduler.filePath}")
     private String path;
-
     @Value("${actionScheduler.runInterval}")
     private String runInterval;
 
     @Scheduled(fixedRateString = "${actionScheduler.runInterval}")
     private void scheduleEvaluator() throws FileNotFoundException {
         List<Request> requests = scheduleReader();
-        ZonedTime zonedTime = new ZonedTime();
-
-        OffsetDateTime timeToCheck = zonedTime.getTimeToCheck();
+        ZonedDateTime timeToCheck = getTimeToCheck();
+        getTimeToCheck();
 
         requests.forEach(request -> {
             if (request.getDays().contains(timeToCheck.getDayOfWeek())
@@ -59,5 +61,8 @@ public class ActionService {
         return requests;
     }
 
+    public ZonedDateTime getTimeToCheck() {
+        return ZonedDateTime.ofInstant(Instant.now(), ZoneId.of(timeZoneOffset));
+    }
 
 }

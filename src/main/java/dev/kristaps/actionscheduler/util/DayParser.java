@@ -1,10 +1,12 @@
 package dev.kristaps.actionscheduler.util;
 
+import org.springframework.stereotype.Component;
+
 import java.time.DayOfWeek;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Component
 public class DayParser {
     public DayParser() {
     }
