@@ -1,68 +1,40 @@
 package dev.kristaps.actionscheduler;
 
-import dev.kristaps.actionscheduler.dto.Request;
-import dev.kristaps.actionscheduler.util.DayParser;
-import org.springframework.beans.factory.annotation.Value;
+import dev.kristaps.actionscheduler.config.ActionSchedulerConfig;
+import dev.kristaps.actionscheduler.dto.CVSEntry;
+import dev.kristaps.actionscheduler.util.CVSReader;
+import dev.kristaps.actionscheduler.util.LocalTimeAtZone;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.time.Instant;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.ArrayList;
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Scanner;
 
 @Service
 public class ActionService {
     private final Long SECONDS_IN_MS = 1000L;
-    @Value("${actionScheduler.timeZoneOffset}")
-    private String timeZoneOffset;
-    @Value("${actionScheduler.filePath}")
-    private String path;
-    @Value("${actionScheduler.runInterval}")
-    private String runInterval;
+    private final ActionSchedulerConfig config;
 
-    @Scheduled(fixedRateString = "${actionScheduler.runInterval}")
+    public ActionService(ActionSchedulerConfig config) {
+        this.config = config;
+    }
+
+    @Scheduled(fixedRateString = "${action-scheduler.runInterval}")
     private void scheduleEvaluator() throws FileNotFoundException {
-        List<Request> requests = scheduleReader();
-        ZonedDateTime timeToCheck = getTimeToCheck();
-        getTimeToCheck();
+        List<CVSEntry> entries = CVSReader.scheduleReader(config.getFilePath());
+        LocalDateTime timeToCheck = LocalTimeAtZone.getTimeToCheck(config.getZoneID());
 
-        requests.forEach(request -> {
-            if (request.getDays().contains(timeToCheck.getDayOfWeek())
-                    && timeToCheck.toLocalTime().isAfter(request.getTime())
-                    && timeToCheck.toLocalTime().minusSeconds(Long.parseLong(runInterval) / SECONDS_IN_MS)
-                    .isBefore(request.getTime())
-            ) {
-                System.out.println("It's time to do the action");
+        entries.forEach(CVSEntry -> {
+            if (CVSEntry.getDays().contains(timeToCheck.getDayOfWeek())) {
+                LocalDateTime time = timeToCheck.toLocalDate().atTime(CVSEntry.getTime());
+                if (timeToCheck.isAfter(time)
+                        && timeToCheck.minusSeconds(Long.parseLong(config.getRunInterval()) / SECONDS_IN_MS)
+                        .isBefore(time)
+                ) {
+                    Action.takeAction();
+                }
             }
         });
     }
-
-    private List<Request> scheduleReader() throws FileNotFoundException {
-        List<Request> requests = new ArrayList<>();
-        DayParser dayParser = new DayParser();
-
-        try {
-            Scanner sc = new Scanner(new File(path));
-            while (sc.hasNext()) {
-                String[] timeAndDays = sc.next().split(",");
-                Request request = new Request(LocalTime.parse(timeAndDays[0]), dayParser.parseDays(timeAndDays[1]));
-                requests.add(request);
-            }
-            sc.close();
-        } catch (FileNotFoundException e) {
-            throw new FileNotFoundException("File not found!");
-        }
-        return requests;
-    }
-
-    public ZonedDateTime getTimeToCheck() {
-        return ZonedDateTime.ofInstant(Instant.now(), ZoneId.of(timeZoneOffset));
-    }
-
 }

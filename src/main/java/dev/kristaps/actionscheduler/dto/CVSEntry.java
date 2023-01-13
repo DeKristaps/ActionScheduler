@@ -5,11 +5,11 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.Objects;
 
-public class Request {
+public class CVSEntry {
     LocalTime time;
     List<DayOfWeek> days;
 
-    public Request(LocalTime time, List<DayOfWeek> days) {
+    public CVSEntry(LocalTime time, List<DayOfWeek> days) {
         this.time = time;
         this.days = days;
     }
@@ -34,8 +34,8 @@ public class Request {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Request request = (Request) o;
-        return time.equals(request.time) && days.equals(request.days);
+        CVSEntry CVSEntry = (CVSEntry) o;
+        return time.equals(CVSEntry.time) && days.equals(CVSEntry.days);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class Request {
 
     @Override
     public String toString() {
-        return "Request{" +
+        return "CVSEntry{" +
                 "time=" + time +
                 ", days=" + days +
                 '}';

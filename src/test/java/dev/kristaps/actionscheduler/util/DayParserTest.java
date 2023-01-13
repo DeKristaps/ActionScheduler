@@ -12,9 +12,8 @@ class DayParserTest {
     void parseDaysTest() {
         List<DayOfWeek> expectedDays = List.of(DayOfWeek.MONDAY);
         String input = "1";
-        DayParser dayParser = new DayParser();
 
-        List<DayOfWeek> actual = dayParser.parseDays(input);
+        List<DayOfWeek> actual = DayParser.parseDays(input);
 
         Assertions.assertEquals(expectedDays, actual);
     }

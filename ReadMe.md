@@ -4,7 +4,7 @@ This is an Action scheduler that runs in a configurable interval, and can read a
 
 The program can be configured with:
 
-* Zone offset for checking times in different countries.
+* Zone ID for checking times in different countries.
 * A run interval in ms (after which the program opens the file again and checks the days and times listed).
 Any file location.
 * The program can be configured in the application.properties file.
@@ -13,9 +13,7 @@ After hitting run the program executes immediately and then only after the speci
 
 To run the program you must first set the file path in the application.properties file.
 
-At the moment the program will only print - "It's time to do the action" when time and days match the CSV,
-but it can be modified to make any method call. 
-
-To do this, changes need to be made in the highlighted area. 
+At the moment program calls the Action class with a void methode that prints - "It's time to do something" 
+This can be changed here -> 
 
 <img src="ReadMePic/Screen.PNG">
