@@ -1,8 +1,10 @@
 package dev.kristaps.actionscheduler.config;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import java.time.Clock;
 
 
 @Configuration
@@ -35,5 +37,10 @@ public class ActionSchedulerConfig {
 
     public void setZoneID(String zoneID) {
         this.zoneID = zoneID;
+    }
+
+    @Bean
+    public Clock clock() {
+        return Clock.systemDefaultZone();
     }
 }

@@ -1,8 +1,10 @@
 package dev.kristaps.actionscheduler;
 
-public class Action {
+import org.springframework.stereotype.Component;
 
-    public static void takeAction() {
+@Component
+public class Action {
+    public void takeAction() {
         System.out.println("Its time to do something");
     }
 }
